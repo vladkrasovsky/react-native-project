@@ -1,13 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 
 import LoginScreen from './screens/auth/LoginScreen';
 import RegistrationScreen from './screens/auth/RegistrationScreen';
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -16,18 +12,8 @@ const App = () => {
     'Roboto-Bold': require('./assets/fonts/Roboto/Roboto-Bold.ttf'),
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  return <LoginScreen onLayout={onLayoutRootView} />;
-  // return <RegistrationScreen onLayout={onLayoutRootView} />;
+  return <>{fontsLoaded && <LoginScreen />}</>;
+  // return <>{fontsLoaded && <RegistrationScreen />}</>;
 };
 
 export default App;
