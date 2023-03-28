@@ -1,9 +1,8 @@
-import React from 'react';
-
+import React, { useState } from 'react';
 import { useFonts } from 'expo-font';
-
-import LoginScreen from './screens/auth/LoginScreen';
-import RegistrationScreen from './screens/auth/RegistrationScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { useRoute } from './router';
+import { AppContext } from './AppContext';
 
 const App = () => {
   const [fontsLoaded] = useFonts({
@@ -12,8 +11,16 @@ const App = () => {
     'Roboto-Bold': require('./assets/fonts/Roboto/Roboto-Bold.ttf'),
   });
 
-  return <>{fontsLoaded && <LoginScreen />}</>;
-  // return <>{fontsLoaded && <RegistrationScreen />}</>;
+  const [isAuth, setIsAuth] = useState(false);
+  const routing = useRoute(isAuth);
+
+  if (!fontsLoaded) return null;
+
+  return (
+    <AppContext.Provider value={{ isAuth, setIsAuth }}>
+      <NavigationContainer>{routing}</NavigationContainer>
+    </AppContext.Provider>
+  );
 };
 
 export default App;

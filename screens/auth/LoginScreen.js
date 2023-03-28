@@ -4,7 +4,7 @@
 // Додати автозакриття клавіатури по кліку за межами форм (Використовуємо Keyboard.dismiss)
 // Додати стилі до компонента LoginScreen
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -19,12 +19,15 @@ import {
   Dimensions,
 } from 'react-native';
 
+import { AppContext } from '../../AppContext';
+
 const initialState = {
   email: '',
   password: '',
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
+  const { setIsAuth } = useContext(AppContext);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
 
@@ -61,8 +64,14 @@ const LoginScreen = () => {
 
   const keyboardHide = () => {
     Keyboard.dismiss();
+  };
+
+  const handleSubmit = () => {
+    keyboardHide();
     console.log(state);
     setState(initialState);
+    setIsAuth(true);
+    // navigation.navigate('Posts');
   };
 
   return (
@@ -115,14 +124,18 @@ const LoginScreen = () => {
                   <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={0.8}
-                    onPress={keyboardHide}
+                    onPress={handleSubmit}
                   >
                     <Text style={styles.btnTitle}>Sign in</Text>
                   </TouchableOpacity>
                 )}
 
                 {!isShowKeyboard && (
-                  <Text style={styles.text}>No account? Sign up</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Register')}
+                  >
+                    <Text style={styles.text}>No account? Sign up</Text>
+                  </TouchableOpacity>
                 )}
               </View>
             </View>

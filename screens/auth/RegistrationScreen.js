@@ -4,7 +4,7 @@
 // Додати автозакриття клавіатури по кліку за межами форм (Використовуємо Keyboard.dismiss)
 // Додати стилі до компонента RegistrationScreen
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -19,13 +19,16 @@ import {
   Dimensions,
 } from 'react-native';
 
+import { AppContext } from '../../AppContext';
+
 const initialState = {
   login: '',
   email: '',
   password: '',
 };
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ navigation }) => {
+  const { setIsAuth } = useContext(AppContext);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
 
@@ -62,8 +65,14 @@ const RegistrationScreen = () => {
 
   const keyboardHide = () => {
     Keyboard.dismiss();
+  };
+
+  const handleSubmit = () => {
+    keyboardHide();
     console.log(state);
     setState(initialState);
+    setIsAuth(true);
+    // navigation.navigate('Home');
   };
 
   return (
@@ -128,16 +137,20 @@ const RegistrationScreen = () => {
                   <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={0.8}
-                    onPress={keyboardHide}
+                    onPress={handleSubmit}
                   >
                     <Text style={styles.btnTitle}>Sign up</Text>
                   </TouchableOpacity>
                 )}
 
                 {!isShowKeyboard && (
-                  <Text style={styles.text}>
-                    Already have an account? Sign in
-                  </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Login')}
+                  >
+                    <Text style={styles.text}>
+                      Already have an account? Sign in
+                    </Text>
+                  </TouchableOpacity>
                 )}
               </View>
             </View>
